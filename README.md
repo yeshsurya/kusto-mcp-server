@@ -56,7 +56,7 @@ Add to your Claude Desktop configuration:
   "mcpServers": {
     "kusto": {
       "command": "npx",
-      "args": ["@yeshsurya/kusto-mcp-server"],
+      "args": ["-y", "kusto-mcp-server"],
       "env": {
         "KUSTO_CLI_PATH": "~/.nuget/packages/microsoft.azure.kusto.tools/14.0.3/tools/net8.0/Kusto.Cli.dll"
       }
@@ -68,7 +68,7 @@ Add to your Claude Desktop configuration:
 ### Claude Code (CLI)
 
 ```bash
-claude mcp add kusto -- npx kusto-mcp-server
+claude mcp add kusto -- npx -y kusto-mcp-server
 ```
 
 Verify it's connected:
@@ -78,7 +78,7 @@ claude mcp list
 
 ### VS Code with GitHub Copilot
 
-Add to your VS Code `settings.json`:
+Add to your VS Code `settings.json` (or `.vscode/mcp.json` in your workspace):
 
 ```json
 {
@@ -86,7 +86,7 @@ Add to your VS Code `settings.json`:
     "servers": {
       "kusto": {
         "command": "npx",
-        "args": ["@yeshsurya/kusto-mcp-server"],
+        "args": ["-y", "kusto-mcp-server"],
         "env": {
           "KUSTO_CLI_PATH": "~/.nuget/packages/microsoft.azure.kusto.tools/14.0.3/tools/net8.0/Kusto.Cli.dll"
         }
@@ -95,6 +95,13 @@ Add to your VS Code `settings.json`:
   }
 }
 ```
+
+Or use the VS Code command palette:
+1. Open Command Palette (`Ctrl+Shift+P` / `Cmd+Shift+P`)
+2. Run **"MCP: Add Server"**
+3. Select **"Command (stdio)"**
+4. Enter command: `npx -y kusto-mcp-server`
+5. Enter server ID: `kusto`
 
 ## Authentication
 
@@ -203,16 +210,6 @@ npm run dev
 
 # Run tests
 npm test
-```
-
-## Publishing
-
-```bash
-# Dry run to verify package contents
-npm publish --dry-run
-
-# Publish to npm
-npm publish --access public
 ```
 
 ## License
