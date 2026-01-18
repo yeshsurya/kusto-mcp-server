@@ -1,6 +1,14 @@
 # Kusto MCP Server
 
-An MCP (Model Context Protocol) server that provides tools for interacting with Azure Data Explorer (Kusto) clusters.
+An MCP (Model Context Protocol) server that provides tools for interacting with Azure Data Explorer (Kusto) clusters. Query, manage connections, and explore schemas using AI assistants like Claude and GitHub Copilot.
+
+## Features
+
+- Execute KQL queries and scripts
+- Manage multiple cluster connections
+- Explore database schemas
+- Full Azure authentication support
+- Works with Claude Desktop, Claude Code CLI, and VS Code with GitHub Copilot
 
 ## Prerequisites
 
@@ -9,9 +17,7 @@ An MCP (Model Context Protocol) server that provides tools for interacting with 
 - Kusto CLI (`microsoft.azure.kusto.tools` NuGet package)
 - Azure CLI (for authentication)
 
-## Installation
-
-### 1. Install the Kusto CLI
+### Install Kusto CLI
 
 ```bash
 dotnet tool install -g Microsoft.Azure.Kusto.Tools
@@ -22,18 +28,47 @@ Or via NuGet:
 nuget install microsoft.azure.kusto.tools -Version 14.0.3
 ```
 
-### 2. Install the MCP Server
+## Installation
+
+### Via npm (recommended)
 
 ```bash
-cd kusto-mcp-server
-npm install
-npm run build
+npm install -g kusto-mcp-server
 ```
 
-### 3. Add to Claude Code (CLI)
+### Via npx (no installation required)
 
 ```bash
-claude mcp add kusto node /path/to/kusto-mcp-server/dist/index.js
+npx kusto-mcp-server
+```
+
+## Usage with AI Assistants
+
+### Claude Desktop
+
+Add to your Claude Desktop configuration:
+- **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+- **macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+- **Linux**: `~/.config/claude/claude_desktop_config.json`
+
+```json
+{
+  "mcpServers": {
+    "kusto": {
+      "command": "npx",
+      "args": ["@yeshsurya/kusto-mcp-server"],
+      "env": {
+        "KUSTO_CLI_PATH": "~/.nuget/packages/microsoft.azure.kusto.tools/14.0.3/tools/net8.0/Kusto.Cli.dll"
+      }
+    }
+  }
+}
+```
+
+### Claude Code (CLI)
+
+```bash
+claude mcp add kusto -- npx kusto-mcp-server
 ```
 
 Verify it's connected:
@@ -41,20 +76,20 @@ Verify it's connected:
 claude mcp list
 ```
 
-### Alternative: Manual Configuration (Claude Desktop)
+### VS Code with GitHub Copilot
 
-Add to your Claude Desktop configuration:
-- Linux: `~/.config/claude/claude_desktop_config.json`
-- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
+Add to your VS Code `settings.json`:
 
 ```json
 {
-  "mcpServers": {
-    "kusto": {
-      "command": "node",
-      "args": ["/path/to/kusto-mcp-server/dist/index.js"],
-      "env": {
-        "KUSTO_CLI_PATH": "~/.nuget/packages/microsoft.azure.kusto.tools/14.0.3/tools/net8.0/Kusto.Cli.dll"
+  "mcp": {
+    "servers": {
+      "kusto": {
+        "command": "npx",
+        "args": ["@yeshsurya/kusto-mcp-server"],
+        "env": {
+          "KUSTO_CLI_PATH": "~/.nuget/packages/microsoft.azure.kusto.tools/14.0.3/tools/net8.0/Kusto.Cli.dll"
+        }
       }
     }
   }
@@ -153,6 +188,13 @@ Environment variables:
 ## Development
 
 ```bash
+# Clone the repository
+git clone https://github.com/yeshsurya/kusto-mcp-server.git
+cd kusto-mcp-server
+
+# Install dependencies
+npm install
+
 # Build
 npm run build
 
@@ -161,6 +203,16 @@ npm run dev
 
 # Run tests
 npm test
+```
+
+## Publishing
+
+```bash
+# Dry run to verify package contents
+npm publish --dry-run
+
+# Publish to npm
+npm publish --access public
 ```
 
 ## License
